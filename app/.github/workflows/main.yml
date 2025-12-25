@@ -1,16 +1,22 @@
-name: Python CI pipeline
+name: CI + Docker + GHCR
 
-on: 
+on:
   push:
     branches:
       - main
-  pull_request:
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  IMAGE_NAME: python-ci-docker-demo
 
 jobs:
-  build-test:
+  test:
     runs-on: ubuntu-latest
 
-    steps: 
+    steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -30,3 +36,27 @@ jobs:
           source venv/bin/activate
           python -m unittest
 
+  docker:
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Docker image
+        run: |
+          OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          docker build -t ghcr.io/$OWNER/${{ env.IMAGE_NAME }}:latest .
+
+      - name: Push Docker image
+        run: |
+          OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          docker push ghcr.io/$OWNER/${{ env.IMAGE_NAME }}:latest
