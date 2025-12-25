@@ -63,7 +63,7 @@ jobs:
       - name: Build Docker image
         run: |
           OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
-          docker build -t ghcr.io/$OWNER/${{ env.IMAGE_NAME }}:latest .
+          docker build -t ghcr.io/$OWNER/${{ env.IMAGE_NAME }}:latest ./app
 
       - name: Push Docker image
         run: |
