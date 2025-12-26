@@ -22,7 +22,7 @@ def table_html(number):
     logging.info(f"Table requested for {number}")
     result = [f"{number} x {i} = {number*i}" for i in range(1, 11)]
     return "<br>".join(result)
-    logging.info("Table generated successfully")
+    logging.info(f"Table generated successfully")
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
