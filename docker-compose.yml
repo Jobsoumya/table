@@ -17,7 +17,7 @@ services:
     ports:
       - "8081:80"
     volumes:
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx/default.conf:/var/jenkins_home/workspace/Table-Jenkins/nginx/default.conf
     depends_on:
       app:
         condition: service_healthy
