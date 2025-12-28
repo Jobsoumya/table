@@ -49,7 +49,7 @@ pipeline {
 
     stage('Smoke Test via Nginx') {
       steps {
-        sh 'curl -f http://localhost:8081'
+        sh 'docker exec nginx_proxy curl -f http://localhost'
       }
     }
   }
