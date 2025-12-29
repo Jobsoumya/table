@@ -17,6 +17,22 @@ pipeline {
       }
     }
 
+    stage('Quality Checks') {
+        parallel {
+
+          stage('Lint') {
+              steps {
+                  sh 'echo "Run flake8 here"'
+              }
+          }
+
+          stage('Unit Tests') {
+              steps {
+                  sh 'echo "Run unit tests here"'
+              }
+          }
+        }  
+    }
     stage('Build Images') {
       steps {
         sh 'docker-compose build'
@@ -25,7 +41,7 @@ pipeline {
 
     stage('Start Services') {
       steps {
-        sh 'docker-compose up -d'
+        sh 'docker-compose up -d --abort-on-container-exit'
       }
     }
 
@@ -56,7 +72,13 @@ pipeline {
 
   post {
     always {
-      sh 'docker-compose down -v'
+      sh 'docker-compose down -v || true' # Ignore Faliure
+    }
+    success {
+            echo "Integration tests passed"
+    }
+    failure {
+            echo "Integration tests failed"
     }
   }
 }
