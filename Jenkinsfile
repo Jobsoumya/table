@@ -72,7 +72,7 @@ pipeline {
 
   post {
     always {
-      sh 'docker-compose down -v || true' # Ignore Faliure
+      sh 'docker-compose down -v || true'
     }
     success {
             echo "Integration tests passed"
